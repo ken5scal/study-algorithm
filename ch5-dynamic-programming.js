@@ -6,10 +6,45 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 ////////// Frog Problem ////////
+var inf = Math.pow(10, 1000);
 var node = [2, 9, 4, 5, 1, 6, 10];
-var total_costs = __spreadArrays(Array(node.length)).map(function (_, i) { return 0; });
-console.log("Frog Jumping Costs with node " + node + ": " + frog_jump(node));
+console.log("Frog Jumping Costs with node [" + node + "]: " + frog_jump(node));
+console.log("Frog Jumping Costs with node [" + node + "] using relaxation: " + frog_jump_with_relaxation(node));
+console.log("Frog Jumping Costs (push based) with node [" + node + "]: " + frog_jum_push_based(node));
+console.log("Frog Jumping Costs with node [" + node + "] using recursion: " + frog_jump_recursion(node.length - 1));
+var memo_ch5 = __spreadArrays(Array(node.length)).map(function (_, i) { return inf; });
+console.log("Frog Jumping Costs with node [" + node + "] using memo-recursion: " + frog_jump_memo_recursion(node.length - 1));
+function frog_jump_memo_recursion(idx) {
+    var result = memo_ch5[idx];
+    if (result < inf) {
+        return result;
+    }
+    else if (idx === 0) {
+        return 0;
+    }
+    else if (idx === 1) {
+        return Math.abs(node[idx] - node[idx - 1]); //+ 0
+    }
+    result = changeMinRelaxation(result, frog_jump_recursion(idx - 1) + Math.abs(node[idx] - node[idx - 1]));
+    // if ( idx > 1 ) {
+    result = changeMinRelaxation(result, frog_jump_recursion(idx - 2) + Math.abs(node[idx] - node[idx - 2]));
+    // }
+    memo_ch5[idx] = result;
+    return result;
+}
+function frog_jump_recursion(idx) {
+    if (idx === 0) {
+        return 0;
+    }
+    var result = Math.pow(10, 1000);
+    result = changeMinRelaxation(result, frog_jump_recursion(idx - 1) + Math.abs(node[idx] - node[idx - 1]));
+    if (idx > 1) {
+        result = changeMinRelaxation(result, frog_jump_recursion(idx - 2) + Math.abs(node[idx] - node[idx - 2]));
+    }
+    return result;
+}
 function frog_jump(each_costs) {
+    var total_costs = __spreadArrays(Array(each_costs.length)).map(function (_, i) { return Math.pow(10, 1000); });
     for (var i = 0; i < each_costs.length; i++) {
         if (i === 0) {
             total_costs[i] = 0;
@@ -24,4 +59,35 @@ function frog_jump(each_costs) {
         }
     }
     return total_costs[each_costs.length - 1];
+}
+function frog_jum_push_based(costs) {
+    var total_costs = __spreadArrays(Array(costs.length)).map(function (_, i) { return Math.pow(10, 1000); });
+    total_costs[0] = 0;
+    for (var i = 0; i < costs.length; i++) {
+        if (i + 1 < costs.length) {
+            total_costs[i + 1] = changeMinRelaxation(total_costs[i + 1], total_costs[i] + Math.abs(costs[i] - costs[i + 1]));
+        }
+        if (i + 2 < costs.length) {
+            total_costs[i + 2] = changeMinRelaxation(total_costs[i + 2], total_costs[i] + Math.abs(costs[i] - costs[i + 2]));
+        }
+    }
+    return total_costs[costs.length - 1];
+}
+function frog_jump_with_relaxation(costs) {
+    var total_costs = __spreadArrays(Array(costs.length)).map(function (_, i) { return Math.pow(10, 1000); });
+    total_costs[0] = 0;
+    var calculatePrev = function (x) { return total_costs[x - 1] + Math.abs(costs[x] - costs[x - 1]); };
+    var calculatePrevPrev = function (x) { return total_costs[x - 2] + Math.abs(costs[x] - costs[x - 2]); };
+    for (var i = 1; i < costs.length; i++) {
+        if (i === 1) {
+            total_costs[i] = changeMinRelaxation(total_costs[i], calculatePrev(i));
+        }
+        else {
+            total_costs[i] = changeMinRelaxation(calculatePrevPrev(i), calculatePrev(i));
+        }
+    }
+    return total_costs[costs.length - 1];
+}
+function changeMinRelaxation(a, b) {
+    return a > b ? b : a;
 }
