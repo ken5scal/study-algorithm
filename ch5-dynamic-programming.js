@@ -14,18 +14,28 @@ console.log("Frog Jumping Costs (push based) with node [" + node + "]: " + frog_
 console.log("Frog Jumping Costs with node [" + node + "] using recursion: " + frog_jump_recursion(node.length - 1));
 var memo_ch5 = __spreadArrays(Array(node.length)).map(function (_, i) { return inf; });
 console.log("Frog Jumping Costs with node [" + node + "] using memo-recursion: " + frog_jump_memo_recursion(node.length - 1));
+var multi = [[1, 2, 3], [6, 7, 8]];
+console.log(multi);
 console.log("napsack: " + napsack([2, 1, 3, 2, 1, 5], [3, 2, 6, 1, 3, 85], 15));
 function napsack(weights, values, maxWeight) {
-    var initial_values = __spreadArrays(Array(maxWeight)).map(function (_, i) { return 0; });
-    var total_costs = __spreadArrays(Array(weights.length)).map(function (_, i) { return initial_values; });
-    for (var i = 0; i <= values.length; i++) {
+    var total_costs = [];
+    for (var x = 0; x <= values.length; x++) {
+        var row = new Array();
+        for (var y = 0; y <= maxWeight; y++) {
+            row.push(0);
+        }
+        total_costs.push(row);
+    }
+    for (var i = 0; i < values.length; i++) {
         for (var w = 0; w <= maxWeight; w++) {
+            console.log('--------------------');
+            console.log("currently: i = " + i + ", w = " + w + ", weights[i] = " + weights[i] + ", values[i] = " + values[i] + ", total_costs[" + i + " + 1][" + w + "]: " + total_costs[i + 1][w]);
             if (w - weights[i] >= 0) {
-                console.log("currently: " + i + ", " + w);
-                console.log("currently: " + total_costs);
-                changeMax(total_costs[i + 1][w], total_costs[i][w - weights[i]] + values[i]);
+                total_costs[i + 1][w] = changeMax(total_costs[i + 1][w], total_costs[i][w - weights[i]] + values[i]);
+                console.log("currently w - weiht[i]: " + total_costs);
             }
-            changeMax(total_costs[i + 1][w], total_costs[i][w]);
+            total_costs[i + 1][w] = changeMax(total_costs[i + 1][w], total_costs[i][w]);
+            console.log(total_costs);
         }
     }
     return total_costs[values.length][maxWeight];

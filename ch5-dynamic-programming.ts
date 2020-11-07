@@ -8,21 +8,28 @@ console.log(`Frog Jumping Costs (push based) with node [${node}]: ${frog_jum_pus
 console.log(`Frog Jumping Costs with node [${node}] using recursion: ${frog_jump_recursion(node.length - 1)}`)
 let memo_ch5 = [...Array(node.length)].map((_, i)=> inf)
 console.log(`Frog Jumping Costs with node [${node}] using memo-recursion: ${frog_jump_memo_recursion(node.length - 1)}`)
+var multi:number[][] = [[1,2,3],[6,7,8]]
+console.log(multi)
+
 console.log(`napsack: ${napsack([2, 1, 3, 2, 1, 5], [3, 2, 6, 1, 3, 85], 15)}`)
 
 function napsack(weights:number[], values:number[], maxWeight: number): number {
-    let initial_values = [...Array<number>(maxWeight)].map((_, i) => 0)
-    let total_costs = [...Array<number>(weights.length)].map((_, i) =>  initial_values)
+    var total_costs:number[][] = []
+    for (let x = 0; x <= values.length; x++) {
+        let row:number[] = new Array<number>()
+        for (let y = 0; y <= maxWeight; y++) {
+            row.push(0)
+        }
+        total_costs.push(row)
+    }
 
-    for (let i = 0; i <= values.length; i++) {
+    for (let i = 0; i < values.length; i++) {
         for (let w = 0; w <=maxWeight ; w++) {
             if (w - weights[i] >= 0) {
-                console.log(`currently: ${i}, ${w}`)
-                console.log(`currently: ${total_costs}`)
-                changeMax(total_costs[i + 1][w], total_costs[i][w - weights[i]] + values[i])
+                total_costs[i + 1][w] = changeMax(total_costs[i + 1][w],  total_costs[i][w - weights[i]] + values[i])
             }
 
-            changeMax(total_costs[i + 1][w], total_costs[i][w])
+            total_costs[i + 1][w] = changeMax(total_costs[i + 1][w], total_costs[i][w])
         }
     }
 
