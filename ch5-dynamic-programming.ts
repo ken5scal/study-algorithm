@@ -8,11 +8,34 @@ console.log(`Frog Jumping Costs (push based) with node [${node}]: ${frog_jum_pus
 console.log(`Frog Jumping Costs with node [${node}] using recursion: ${frog_jump_recursion(node.length - 1)}`)
 let memo_ch5 = [...Array(node.length)].map((_, i)=> inf)
 console.log(`Frog Jumping Costs with node [${node}] using memo-recursion: ${frog_jump_memo_recursion(node.length - 1)}`)
-var multi:number[][] = [[1,2,3],[6,7,8]]
-console.log(multi)
-
 console.log(`napsack: ${napsack([2, 1, 3, 2, 1, 5], [3, 2, 6, 1, 3, 85], 15)}`)
+console.log(`edit distance: ${edit_distance('logistic', 'algorithm')}`)
 
+function edit_distance(s: string, t : string) :number {
+    var distances:number[][] = []
+    for (let x = 0; x <= s.length; x++) {
+        let row:number[] = new Array<number>()
+        for (let y = 0; y <= t.length; y++) {
+            row.push(inf)
+        }
+        distances.push(row)
+    }
+    distances[0][0] = 0
+
+    for (let i = 0; i <= s.length; i++) {
+        for (let j = 0; j <= t.length; j++) {
+            if ( i > 0 && j> 0) {
+
+            }
+            if (i > 0) {
+
+            }
+    
+            if ( j > 0 ) {}
+        }
+    }
+    return distances[s.length][t.length]
+}
 function napsack(weights:number[], values:number[], maxWeight: number): number {
     var total_costs:number[][] = []
     for (let x = 0; x <= values.length; x++) {
