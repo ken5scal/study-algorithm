@@ -25,13 +25,20 @@ function edit_distance(s: string, t : string) :number {
     for (let i = 0; i <= s.length; i++) {
         for (let j = 0; j <= t.length; j++) {
             if ( i > 0 && j> 0) {
-
-            }
-            if (i > 0) {
-
+                if (s[i - 1] == t[j - 1]) {
+                    distances[i][j] = changeMinRelaxation(distances[i][j], distances[i-1][j-1])
+                } else {
+                    distances[i][j] = changeMinRelaxation(distances[i][j], distances[i-1][j-1] + 1)
+                }
             }
     
-            if ( j > 0 ) {}
+            if ( i > 0 ) {
+                distances[i][j] = changeMinRelaxation(distances[i][j], distances[i-1][j] + 1)
+            }
+
+            if (j > 0) {
+                distances[i][j] = changeMinRelaxation(distances[i][j], distances[i][j-1] + 1)
+            }
         }
     }
     return distances[s.length][t.length]
